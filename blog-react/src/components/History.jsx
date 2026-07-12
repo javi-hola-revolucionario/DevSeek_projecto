@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { ChatContext } from "../context/ChatContext";
+import { useChat } from "../hooks/useChat";
 
 function History() {
-  const { history = [] } = useContext(ChatContext);
+  const { history = [] } = useChat();
 
   return (
     <div className="border p-4 rounded-lg mb-4">

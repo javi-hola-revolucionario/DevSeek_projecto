@@ -1,12 +1,11 @@
-import { useContext } from 'react'
-import { ChatContext } from '../context/ChatContext'
+import { useChat } from '../hooks/useChat'
 import History from './History'
 import Message from './Message'
 import PromptInput from './PromptInput'
 import Sidebar from './Sidebar'
 
 function Chat() {
-  const { messages, history, isLoading, error, sendMessage } = useContext(ChatContext)
+  const { messages, history, isLoading, error, sendMessage } = useChat()
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100">
