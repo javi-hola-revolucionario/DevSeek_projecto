@@ -1,10 +1,13 @@
-import { createContext, useReducer } from 'react'
+import { createContext, useReducer, useState } from 'react'
 import { chatReducer, initialState } from './chatReducer'
+import { generateResponse } from '../services/ollamaService'
 
 export const ChatContext = createContext(null)
 
 export function ChatProvider({ children }) {
   const [state, dispatch] = useReducer(chatReducer, initialState)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const sendMessage = async (content) => {
     if (!content.trim()) {
@@ -14,28 +17,20 @@ export function ChatProvider({ children }) {
     const userMessage = { id: crypto.randomUUID(), role: 'user', content }
     dispatch({ type: 'ADD_MESSAGE', payload: userMessage })
     dispatch({ type: 'ADD_HISTORY', payload: content })
-    dispatch({ type: 'SET_LOADING', payload: true })
+    setIsLoading(true)
+    setError(null)
 
     try {
-      const response = await fetch('http://localhost:11434/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'llama3.2',
-          prompt: content,
-          stream: false,
-        }),
-      })
-
-      const data = await response.json()
+      const response = await generateResponse(content)
       const assistantMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: data.response || 'No response received.',
+        content: response || 'No response received.',
       }
 
       dispatch({ type: 'ADD_MESSAGE', payload: assistantMessage })
     } catch (error) {
+      setError('Unable to reach Ollama. Make sure the service is running.')
       dispatch({
         type: 'ADD_MESSAGE',
         payload: {
@@ -45,12 +40,12 @@ export function ChatProvider({ children }) {
         },
       })
     } finally {
-      dispatch({ type: 'SET_LOADING', payload: false })
+      setIsLoading(false)
     }
   }
 
   return (
-    <ChatContext.Provider value={{ ...state, sendMessage }}>
+    <ChatContext.Provider value={{ ...state, isLoading, error, sendMessage }}>
       {children}
     </ChatContext.Provider>
   )

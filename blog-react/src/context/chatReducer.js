@@ -1,27 +1,29 @@
 export const initialState = {
   messages: [],
   history: [],
-  isLoading: false,
-}
+};
 
 export function chatReducer(state, action) {
   switch (action.type) {
-    case 'ADD_MESSAGE':
+    case "ADD_MESSAGE":
       return {
         ...state,
         messages: [...state.messages, action.payload],
-      }
-    case 'SET_LOADING':
+      };
+
+    case "ADD_HISTORY":
       return {
         ...state,
-        isLoading: action.payload,
-      }
-    case 'ADD_HISTORY':
+        history: [...state.history, action.payload],
+      };
+
+    case "CLEAR_CHAT":
       return {
         ...state,
-        history: [action.payload, ...state.history].slice(0, 6),
-      }
+        messages: [],
+      };
+
     default:
-      return state
+      return state;
   }
 }

@@ -6,7 +6,7 @@ import PromptInput from './PromptInput'
 import Sidebar from './Sidebar'
 
 function Chat() {
-  const { messages, history, isLoading, sendMessage } = useContext(ChatContext)
+  const { messages, history, isLoading, error, sendMessage } = useContext(ChatContext)
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100">
@@ -23,6 +23,12 @@ function Chat() {
             {messages.map((message) => (
               <Message key={message.id} role={message.role} content={message.content} />
             ))}
+
+            {error && (
+              <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                {error}
+              </div>
+            )}
 
             {isLoading && <Message role="assistant" content="Thinking..." isLoading />}
           </div>

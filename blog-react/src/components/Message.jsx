@@ -1,19 +1,17 @@
-function Message({ role, content, isLoading = false }) {
-  const isUser = role === 'user'
-
+function Message({ role, content }) {
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div
-        className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
-          isUser
-            ? 'bg-blue-600 text-white'
-            : 'bg-slate-800 text-slate-100'
-        } ${isLoading ? 'animate-pulse' : ''}`}
-      >
-        {content}
-      </div>
+    <div
+      className={`p-3 my-2 rounded-lg ${
+        role === "user"
+          ? "bg-blue-500 text-white ml-auto"
+          : "bg-gray-200 text-black mr-auto"
+      } max-w-xl`}
+    >
+      <strong>{role === "user" ? "Tú" : "IA"}:</strong>
+
+      <p>{content}</p>
     </div>
-  )
+  );
 }
 
-export default Message
+export default Message;

@@ -1,4 +1,3 @@
-import './App.css'
 import { ChatProvider } from './context/ChatContext'
 import Home from './pages/Home'
 
